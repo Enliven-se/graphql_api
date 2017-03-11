@@ -34,7 +34,11 @@ function graphql_api_graphql_api_info() {
         'name' => 'field_item_file',
         'fields' => function () {
           $schema = graphql_api();
-          return $schema->getInterfaceType('file')->getFields() + [
+          $file_type = $schema->getObjectType('file_file');
+          if (module_exists('file_entity')) {
+            $file_type = $schema->getInterfaceType('file');
+          }
+          return [
             'description' => [
               'type' => Type::string(),
               'description' => t('Alt')
@@ -42,6 +46,10 @@ function graphql_api_graphql_api_info() {
             'display' => [
               'type' => Type::string(),
               'description' => t('Display')
+            ],
+            'file' => [
+              'type' => $file_type,
+              'description' => t('File')
             ]
           ];
         }
@@ -50,7 +58,11 @@ function graphql_api_graphql_api_info() {
         'name' => 'field_item_image',
         'fields' => function () {
           $schema = graphql_api();
-          return $schema->getInterfaceType('file')->getFields() + [
+          $file_type = $schema->getObjectType('file_file');
+          if (module_exists('file_entity')) {
+            $file_type = $schema->getInterfaceType('file');
+          }
+          return [
             'description' => [
               'type' => Type::string(),
               'description' => t('Alt')
@@ -66,6 +78,18 @@ function graphql_api_graphql_api_info() {
             'title' => [
               'type' => Type::string(),
               'description' => t('Title')
+            ],
+            'width' => [
+              'type' => Type::float(),
+              'description' => t('Width')
+            ],
+            'height' => [
+              'type' => Type::float(),
+              'description' => t('Height')
+            ],
+            'file' => [
+              'type' => $file_type,
+              'description' => t('File')
             ]
           ];
         }
@@ -114,6 +138,24 @@ function graphql_api_graphql_api_info() {
             'type' => Type::string(),
             'description' => t('The credentials of the name.')
           ]
+        ]
+      ]),
+      'field_item_link' => new ObjectType([
+        'name' => 'field_item_link',
+        'fields' => [
+          'title' => [
+            'type' => Type::string(),
+            'description' => t('The title of the link.')
+          ],
+          'url' => [
+            'type' => Type::string(),
+            'description' => t('The URL of the link.')
+          ],
+          // @todo convert attributes to JSON?
+//          'attributes' => [
+//            'type' => Type::string(),
+//            'description' => t('The attributes of the link.')
+//          ],
         ]
       ])
     ]
